@@ -20,5 +20,5 @@
 #       Victor Arribas <v.arribas.urjc@gmail.com>
 #
 
-from .pid import (PD, PID, PIDh)
+from .pid import (PD, PID, PIDh, PIDm)
 from .smooth import (MeanSmoother, MedianSmoother)

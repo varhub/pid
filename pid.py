@@ -136,3 +136,34 @@ class PIDh(PD):
         PD.reset(self)
         self._errI = 0
         self._error_history = []
+
+
+class PIDm(PD):
+    """ PID control with a demoralized weighted mean for Integration part.
+    """
+    def __init__(self, reference=0, P=0, D=0, I=0, alpha=0.1, beta=1):
+        PD.__init__(self, reference, P,D)
+
+        self.I = I
+        self.alpha = alpha
+        self.beta = beta
+        self._errI = 0
+
+    def feedback(self, value=None):
+        # idempotency
+        if value is None:
+            return self._feedback
+
+        # error calculation
+        _errP = value - self.reference
+        self._errI = self.beta * self.alpha*_errP + (1-self.alpha)*self._errI
+
+        self._feedback = PD.feedback(self,value) + self.I * self._errI
+        return self._feedback
+
+    def weight(self):
+        return self.P + self.D + self.I
+
+    def reset(self):
+        PD.reset(self)
+        self._errI = 0
