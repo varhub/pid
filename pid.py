@@ -90,7 +90,7 @@ class PID(PD):
         if self._errI < self.Imin:
             self._errI = self.Imin
 
-        self._feedback = PD.feedback(value) + self.I * self._errI
+        self._feedback = PD.feedback(self,value) + self.I * self._errI
         return self._feedback
 
     def weight(self):
@@ -122,11 +122,11 @@ class PIDh(PD):
 
         self._error_history += [_errP]
         n = len(self._error_history)
-        if n > self.I_len:
-            self._error_history = self._error_history[-self.I_len:]
+        if n > self.Ilen:
+            self._error_history = self._error_history[-self.Ilen:]
         self._errI = sum(self._error_history)
 
-        self._feedback = PD.feedback(value) + self.I * self._errI
+        self._feedback = PD.feedback(self,value) + self.I * self._errI
         return self._feedback
 
     def weight(self):
